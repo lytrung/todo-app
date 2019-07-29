@@ -9,22 +9,22 @@ class App extends Component {
     super(props);
     this.state = {
       notes : [
-        {
-          id:1,
-          text: 'Watch youtube'
-        },
-        {
-          id:2,
-          text: 'Cook dinner'
-        },
-        {
-          id:3,
-          text: 'Do react'
-        },
-        {
-          id:4,
-          text: 'Do more react'
-        }
+        // {
+        //   id:1,
+        //   text: 'Watch youtube'
+        // },
+        // {
+        //   id:2,
+        //   text: 'Cook dinner'
+        // },
+        // {
+        //   id:3,
+        //   text: 'Do react'
+        // },
+        // {
+        //   id:4,
+        //   text: 'Do more react'
+        // }
       ],
       newNoteInput:''
     };
@@ -35,11 +35,22 @@ class App extends Component {
     this.setState({notes:this.state.notes})
   }
 
-  removeNote = (nodeId) => {
+  removeNote = (noteId) => {
     var filtered = this.state.notes.filter(function(item) {
-         return item.id !== nodeId
+         return item.id !== noteId
     });
     this.setState({notes:filtered})
+  }
+
+  updateNote = (note) => {
+    var notes = this.state.notes;
+    var noteIndex = notes.findIndex(function(item){
+      return item.id == note.id
+    });
+
+    notes[noteIndex].text = note.text;
+
+    this.setState({notes})
   }
 
   render(){
@@ -50,9 +61,14 @@ class App extends Component {
                 {
                   this.state.notes.map((note) => {
 
-                    console.log(this);
+                    var noteProps = {
+                      ...note,
+                      removeNote:this.removeNote,
+                      updateNote:this.updateNote,
+                      key:note.id
+                    }
                     return (
-                      <Note key={note.id} {...note} />
+                      <Note {...noteProps}/>
                     );
                   })
                 }

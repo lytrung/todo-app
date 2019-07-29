@@ -10,6 +10,8 @@ class Note extends Component {
     };
 
     this.editedNoteInput = React.createRef();
+
+
   }
 
   handleNoteTextDoubleClick = () => {
@@ -22,8 +24,21 @@ class Note extends Component {
     })
   }
 
-  handleEditedNoteInputBlur = (e) => {
+  handleCancelUpdateNoteClick = (e) => {
+    this.setState({text:this.props.text,beingEdited:false});
+  }
+
+  handleUpdateNoteClick = (e) => {
+    e.preventDefault();
+    var note = {
+      id: this.props.id,
+      text:this.state.text
+    }
+    this.props.updateNote(note);
     this.setState({beingEdited:false});
+  }
+  handleNoteRemoveClick = (e) => {
+    this.props.removeNote(this.props.id);
   }
 
   componentDidUpdate(prevProps) {
@@ -41,16 +56,16 @@ class Note extends Component {
                   <div className="form-group">
                     <input type="text" ref={this.editedNoteInput} className="form-control" id="edited-note-input" value={this.state.text} onChange={this.handleEditedNoteInputChange} onBlur={this.handleEditedNoteInputBlur}/>
                   </div>
-                  <button type="submit" className="btn btn-primary" id="update-note">Update</button>
+                  <button onClick={this.handleUpdateNoteClick} type="submit" className="btn btn-primary" id="update-note">Update</button>&nbsp;
+                  <button onClick={this.handleCancelUpdateNoteClick} type="submit" className="btn btn-primary" id="cancelupdate-note">Cancel</button>
                 </div>
               ) : (
                 <div className="note-body">
-                  <i className="far fa-times-circle note-remove"></i>
+                  <i className="far fa-times-circle note-remove" onClick={this.handleNoteRemoveClick}></i>
                   <div className="note-text" onDoubleClick={this.handleNoteTextDoubleClick}>
                     {this.props.text}
                   </div>
                 </div>
-
               )
           }
         </div>
@@ -60,13 +75,3 @@ class Note extends Component {
 }
 
 export default Note;
-
-
-{/*<div className="note" key={note.id} onClick={(e) => this.removeNote(note.id)}>
-          <div className="note-body">
-            <i className="far fa-times-circle note-remove"></i>
-            <div className="note-text">
-              {note.text}
-            </div>
-          </div>
-        </div>*/}
