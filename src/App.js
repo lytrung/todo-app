@@ -1,79 +1,90 @@
 import React, {Component} from 'react';
 import './App.css';
-import NewNoteForm from './newNoteForm.js';
-import Note from './note.js';
+import NewTodoForm from './newTodoForm.js';
+import Todo from './todo.js';
 
 class App extends Component {
 
   constructor(props){
     super(props);
     this.state = {
-      notes : [
-        // {
-        //   id:1,
-        //   text: 'Watch youtube'
-        // },
-        // {
-        //   id:2,
-        //   text: 'Cook dinner'
-        // },
-        // {
-        //   id:3,
-        //   text: 'Do react'
-        // },
-        // {
-        //   id:4,
-        //   text: 'Do more react'
-        // }
+      todos : [
+        {
+          id:1,
+          content: 'Watch youtube',
+          priority: 'Important'
+        },
+        {
+          id:2,
+          content: 'Cook dinner',
+          priority: 'Important'
+        },
+        {
+          id:3,
+          content: 'Do react',
+          priority: 'Important'
+        },
+        {
+          id:4,
+          content: 'Do more react',
+          priority: 'Important'
+        }
       ],
-      newNoteInput:''
+  
     };
   }
 
-  addNote = (note) => {
-    this.state.notes.push(note);
-    this.setState({notes:this.state.notes})
+  addTodo = (data) => {
+    var newTodo = {
+      id: Date.now(),
+      ...data
+    };
+    var todos = this.state.todos;
+
+    this.setState({
+      todos:[newTodo,...todos]
+    })
   }
 
-  removeNote = (noteId) => {
-    var filtered = this.state.notes.filter(function(item) {
-         return item.id !== noteId
+  removeTodo = (id) => {
+    var filteredItems = this.state.todos.filter(function(item) {
+         return item.id !== id
     });
-    this.setState({notes:filtered})
+    this.setState({todos:filteredItems})
   }
 
-  updateNote = (note) => {
-    var notes = this.state.notes;
-    var noteIndex = notes.findIndex(function(item){
-      return item.id == note.id
+  updateTodo = (id,data) => {
+    var todos = this.state.todos;
+    var index = todos.findIndex(function(item){
+      return item.id == id
     });
+    var updatedItem = {...todos[index],...data}
+    todos[index] = updatedItem;
 
-    notes[noteIndex].text = note.text;
-
-    this.setState({notes})
+    this.setState({todos})
   }
 
   render(){
       return (
           <div className="wrap">
             <div className="container">
-              <div className="notes">
+              <div className="todos">
                 {
-                  this.state.notes.map((note) => {
+                  this.state.todos.map((todo) => {
 
-                    var noteProps = {
-                      ...note,
-                      removeNote:this.removeNote,
-                      updateNote:this.updateNote,
-                      key:note.id
+                    var todoProps = {
+                      ...todo,
+                      removeTodo:this.removeTodo,
+                      updateTodo:this.updateTodo,
+                      key:todo.id
                     }
                     return (
-                      <Note {...noteProps}/>
+                      <Todo {...todoProps}/>
                     );
                   })
                 }
 
-                <NewNoteForm addNote={this.addNote} />
+                <NewTodoForm addTodo={this.addTodo}/>
               </div>
             </div>
           </div>
